@@ -1,0 +1,48 @@
+version: "3"
+services:
+  webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # command: npm run migrate && npm run start
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mssql
+    networks:
+      - app-network
+    environment:
+      # Application
+      APP_PORT: 3000
+      APP_HOST: 0.0.0.0
+
+      # Environment
+      NODE_ENV: development
+
+      # Database
+      DB_CLIENT: mssql
+      DB_HOST: mssql
+      DB_USER: sa
+      DB_PASSWORD: reallyStrongPwd123
+      DB_NAME: master
+      DB_PORT: 1433
+
+      # Log
+      LOG_DIR: logs
+      LOG_LEVEL: debug
+
+      TOKEN_SECRET_KEY: secretkeyforjsonwebtoken
+  mssql:
+    image: mcr.microsoft.com/mssql/server
+    # command: printf "CREATE DATABASE dbName\nGO\n" > tmp.sql & /opt/mssql-tools/bin/sqlcmd -i ./tmp.sql -S localhost -U sa -P reallyStrongPwd123
+    networks:
+      - app-network
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: reallyStrongPwd123
+networks:
+  app-network:
+    driver: bridge
