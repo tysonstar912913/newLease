@@ -5,6 +5,8 @@ Based from https://github.com/Bikranshu/express-react-boilerplate.git
 
 ### 2. Installation
 
+Install database server and config database connection settings in .env file.
+
 On the command prompt run the following commands:
 
 ``` 
